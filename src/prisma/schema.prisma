@@ -1,0 +1,417 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-1.1.x", "rhel-openssl-3.0.x"]
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  vendor
+  admin
+}
+
+enum ApplicationStatus {
+  pending
+  approved
+  rejected
+}
+
+// Status only for VENUES (Venues)
+enum VenueStatus {
+  draft
+  pending_review
+  published
+  suspended
+}
+
+enum GenderFocus {
+  neutral
+  boy
+  girl
+}
+
+// Enum to know which model the click belongs to
+enum TrackedTargetType {
+  VENUE
+  SERVICE
+}
+
+// ============================================
+// AUTHENTICATION AND USERS (The "Who")
+// ============================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(vendor)
+  deletedAt     DateTime?
+  vendor        Vendor?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  @@index([email])
+  @@index([deletedAt])
+}
+
+// ============================================
+// VENDOR FLOW (Only for Venues)
+// ============================================
+
+model Vendor {
+  id           String    @id @default(cuid())
+  userId       String    @unique
+  contactName  String
+  businessName String?
+  phone        String?
+  isVerified   Boolean   @default(false)
+  deletedAt    DateTime?
+
+  // Relaciones
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  venues       Venue[]     // Un Vendor SOLO puede tener Locales
+  applications VendorApplication[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  @@index([userId])
+  @@index([deletedAt])
+}
+
+model VendorApplication {
+  id              String            @id @default(cuid())
+  vendorId        String?
+  vendor          Vendor?           @relation(fields: [vendorId], references: [id])
+  contactName     String
+  contactEmail    String            @unique
+  contactPhone    String?
+  businessName    String?
+  website         String?
+  status          ApplicationStatus @default(pending)
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  rejectionReason String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  @@index([status])
+  @@index([contactEmail])
+}
+
+// ============================================
+// CATEGORY 1: VENUES (With Zip Filter)
+// ============================================
+
+
+model Venue {
+  id            String      @id @default(cuid())
+  vendorId      String
+  vendor        Vendor      @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  name          String
+  slug          String      @unique
+  description   String?     @db.Text
+  address       String
+  city          String      @default("Houston")
+
+  // CAMPO CLAVE PARA FILTRO DE VENUES (ZIP CODE)
+  postalCode    String
+
+  latitude      Decimal?
+  longitude     Decimal?
+  website       String?
+  phone         String?
+  status        VenueStatus @default(draft)
+  isFeatured    Boolean     @default(false)
+  specialOffer  String?     @db.Text
+  startingPrice Decimal?
+  discountPrice Decimal?    // BashWish discount starting price (optional)
+  images        VenueImage[]
+  packages      VenuePackage[]
+  reviews       Review[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt()
+  @@index([postalCode]) // Índice para búsqueda rápida por ZIP Code
+  @@index([status, isFeatured])
+  @@index([vendorId])
+}
+
+model VenueImage {
+  id        String  @id @default(cuid())
+  venueId   String
+  url       String
+  altText   String?
+  isPrimary Boolean @default(false)
+  order     Int     @default(0)
+  venue     Venue   @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  @@index([venueId])
+}
+
+model VenuePackage {
+  id           String      @id @default(cuid())
+  venueId      String
+  name         String
+  description  String?     @db.Text
+  price        Decimal
+  discountPrice Decimal?   // BashWish discount price (optional)
+  minKids      Int         @default(1)
+  maxKids      Int
+  ageMin       Int?
+  ageMax       Int?
+  gender_focus GenderFocus @default(neutral)
+  venue        Venue       @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  themes       PackageTheme[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  @@index([venueId])
+  @@index([gender_focus])
+  @@index([minKids, maxKids])
+  @@index([ageMin, ageMax])
+}
+
+model Review {
+  id         String       @id @default(cuid())
+  venueId    String
+  authorName String
+  authorEmail String?     // Email of the user leaving the review
+  rating     Int
+  text       String?      @db.Text
+  reviewDate DateTime
+  source     String       @default("manual")
+  status     ReviewStatus @default(PENDING) // Admin approval
+  isVisible  Boolean      @default(true)    // Controls if shown publicly
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  venue Venue @relation(fields: [venueId], references: [id], onDelete: Cascade)
+
+  @@index([venueId])
+  @@index([status])
+  @@index([isVisible])
+}
+
+enum ReviewStatus {
+  PENDING   // Pending approval
+  APPROVED  // Approved by admin
+  REJECTED  // Rejected by admin
+}
+
+
+// ============================================
+// CATEGORÍA 2: SERVICES (Sin Filtro de Zip)
+// ============================================
+
+model Service {
+  id       String @id @default(cuid())
+
+  // *** SIN vendorId ***
+  // *** SIN ZIP Code (postalCode) - Services no se filtran por ubicación ***
+
+  // Info del Directorio
+  name        String
+  slug        String   @unique
+
+  // El Admin escribe el área de servicio aquí (ej. "Sirve a todo Houston")
+  description String?  @db.Text
+
+  // Info de contacto
+  website String?
+  phone   String?
+
+  // Ubicación (opcional para mostrar en mapa)
+  address    String?
+  city       String?
+  state      String?
+  postalCode String?
+  latitude   Decimal?
+  longitude  Decimal?
+
+  // If Admin creates it, it's published.
+  isPublished Boolean @default(true)
+  isFeatured  Boolean @default(false)
+
+  specialOffer  String? @db.Text
+  startingPrice Decimal?
+  discountPrice Decimal?  // BashWish discount starting price (optional)
+
+  // Relaciones
+  images   ServiceImage[]
+  packages ServicePackage[]
+  reviews  ServiceReview[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  @@index([isPublished, isFeatured])
+}
+
+model ServiceImage {
+  id        String  @id @default(cuid())
+  serviceId String
+  url       String
+  altText   String?
+  isPrimary Boolean @default(false)
+  order     Int     @default(0)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  @@index([serviceId])
+}
+
+model ServicePackage {
+  id          String      @id @default(cuid())
+  serviceId   String
+  name        String
+  description String?     @db.Text
+  price       Decimal
+  discountPrice Decimal?  // BashWish discount price (optional)
+  minKids     Int         @default(1) // Filtros idénticos
+  maxKids     Int
+  ageMin      Int?
+  ageMax      Int?
+  gender_focus GenderFocus @default(neutral)
+  service     Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  themes      ServicePackageTheme[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  @@index([serviceId])
+  @@index([gender_focus])
+  @@index([minKids, maxKids])
+  @@index([ageMin, ageMax])
+}
+
+model ServiceReview {
+  id          String       @id @default(cuid())
+  serviceId   String
+  authorName  String
+  authorEmail String?      // Email of the user leaving the review
+  rating      Int
+  text        String?      @db.Text
+  reviewDate  DateTime
+  source      String       @default("manual")
+  status      ReviewStatus @default(PENDING) // Admin approval
+  isVisible   Boolean      @default(true)    // Controls if shown publicly
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@index([status])
+  @@index([isVisible])
+}
+
+// ============================================
+// TABLAS PIVOTE (Universales)
+// ============================================
+
+model Theme {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  slug     String  @unique
+  isActive Boolean @default(true)
+
+  // Relaciones
+  packages        PackageTheme[]        // Paquetes de Locales
+  servicePackages ServicePackageTheme[] // Paquetes de Servicios
+}
+
+model PackageTheme {
+  packageId String
+  themeId   String
+  package   VenuePackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  theme     Theme        @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  @@id([packageId, themeId])
+  @@index([themeId])
+}
+
+model ServicePackageTheme {
+  packageId String
+  themeId   String
+  package   ServicePackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  theme     Theme          @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  @@id([packageId, themeId])
+  @@index([themeId])
+}
+
+// ============================================
+// CLICK ANALYTICS (MVP)
+// ============================================
+
+// The diary of all clicks ("Leads Sent")
+model Click {
+  id         String            @id @default(cuid())
+  createdAt  DateTime          @default(now()) // When it occurred
+
+  // What was clicked (The Venue or Service ID)
+  targetId   String
+
+  // What type of thing it was (VENUE or SERVICE)
+  targetType TrackedTargetType
+
+  // --- Vendor Information ---
+  // (This field is key for the Vendor dashboard)
+  // We denormalize it for ultra-fast searches.
+  // When you register a VENUE click, copy the vendorId here.
+  // For a SERVICE (admin-only), you can leave it null.
+  vendorId   String?
+
+  @@index([targetId, targetType])
+  @@index([createdAt])
+  @@index([vendorId]) // Key for the Vendor dashboard
+}
+
+// ============================================
+// NEWSLETTER SUBSCRIPTIONS
+// ============================================
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+}

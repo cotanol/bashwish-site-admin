@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bashwish – Full-stack Development Brief</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Fuente Inter de Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto max-w-4xl px-4 py-12">
+        
+        <!-- Encabezado -->
+        <header class="mb-10 border-b border-gray-200 pb-6">
+            <h1 class="text-4xl font-bold text-blue-800">Bashwish – Full-stack Development Brief</h1>
+            <p class="mt-2 text-lg text-gray-600">Un resumen de los objetivos, páginas y características para la reconstrucción de la plataforma.</p>
+        </header>
+
+        <!-- Sección de Objetivos (Goal) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-4">Goal</h2>
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Rebuild the platform from scratch using a modern, clean codebase.</li>
+                    <li>Deliver a mobile-first, fast-loading experience.</li>
+                    <li>Support map search, structured filters, and vendor metadata.</li>
+                    <li>Keep maintenance low by using serverless/simple backend tools.</li>
+                    <li>Integrate GPT (OpenAI) for an AI assistant.</li>
+                    <li>Set up for future monetization (e.g., per-click, featured listings, vendor dashboard).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Sección de Páginas (Pages) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-6">Pages</h2>
+
+            <div class="space-y-8">
+                
+                <!-- 1. Cover Page -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">1. Cover Page</h3>
+                    <p class="text-sm text-gray-500 mb-4">(Referencia de la imagen 1 del documento)</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Main Features:</h4>
+                            <ul class="list-disc list-inside space-y-2 mt-2 text-gray-700">
+                                <li><strong>Top banner:</strong> Logo, page indexes (Home, All venues, Contact), sticky (visible on scroll).</li>
+                                <li><strong>Call To Action:</strong> Nice visuals, visually show "Houston only" availability. Banner should be thinner.</li>
+                                <li><strong>Search section:</strong> Filters for Kid’s age, Boy/Girl, How many kids, Date, Preferences, Postal code. Data to be recorded in a database.</li>
+                                <li><strong>Featured venues section:</strong> Space for 1-3 premium/special offer venues.</li>
+                                <li><strong>Bottom banner:</strong> Basic info.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 2. Search Page -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">2. Search Page</h3>
+                    <p class="text-sm text-gray-500 mb-4">(Referencia de la imagen 2 del documento)</p>
+                    <div class="space-y-4">
+                        <ul class="list-disc list-inside space-y-2 mt-2 text-gray-700">
+                            <li>Needs a more professional look.</li>
+                            <li>Search/filter criteria on top to customize/edit.</li>
+                            <li>Layout: Map on left/right (1/3 space), Venue list (2/3 space).</li>
+                            <li><strong>Venue list details:</strong> Sorted by relevance, Venue name, Picture, Starting price, Google reviews score (if possible), Basic description (e.g., "20-50 kids"), space for special offers.</li>
+                            <li>Clicking an option could show a pop-up with more details.</li>
+                            <li>Must allow clicking into a venue to open a new detailed page.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 3. Detailed Venue Page -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">3. Detailed Venue Page</h3>
+                    <p class="text-sm text-gray-500 mb-4">(Referencia de la imagen 3 del documento)</p>
+                    <div class="space-y-4">
+                        <ul class="list-disc list-inside space-y-2 mt-2 text-gray-700">
+                            <li>Needs a more professional look.</li>
+                            <li>Show several pictures of the venue.</li>
+                            <li>Main conditions: number of people, recommended age, membership required?</li>
+                            <li>Theme tags.</li>
+                            <li>Different packages and prices.</li>
+                            <li>Reviews from Google Maps.</li>
+                            <li>Map location.</li>
+                            <li>Show recommended similar venues.</li>
+                            <li>Link to book on their own website.</li>
+                            <li><strong>Booking Link Idea:</strong> Can we pre-populate info (e.g., kids, date) in the link to save user clicks?</li>
+                            <li>Must record the click (as a potential customer sent).</li>
+                            <li>Link click to the specific search in the database.</li>
+                            <li><strong>Email Capture Idea:</strong> Ask for email here? Maybe to unlock a discount code (e.g., BASHWISH10) to use on the vendor's site.</li>
+                            <li>Advertise special deals clearly (e.g., "Bashwish offer: Pizza included").</li>
+                        </ul>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Sección de Otras Características (Other Features) -->
+        <section>
+            <h2 class="text-3xl font-semibold text-gray-900 mb-6">Other Features</h2>
+
+            <div class="space-y-8">
+
+                <!-- 1. Party Genie -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">Party Genie (AI Assistant)</h3>
+                    <div class="space-y-4">
+                        <p class="text-gray-600">Imagine as a pop-up in the bottom-right corner for conversation.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-2 text-gray-700">
+                            <li>Frontend form to collect party needs (age, theme, guests).</li>
+                            <li>Integration with OpenAI (ChatGPT API) to generate a personalized party plan.</li>
+                            <li>Suggestions include venue matches, themed add-ons, DIY ideas.</li>
+                            <li>Display suggestions in a clean format or email to the user.</li>
+                            <li>Optional: lead capture or feedback button.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 2. Vendor Tools & Monetization -->
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">Vendor Tools & Monetization</h3>
+                    <div class="space-y-4">
+                        <ul class="list-disc list-inside space-y-2 mt-2 text-gray-700">
+                            <li>Contact form for vendors to "claim" their listing and request edits.</li>
+                            <li>Optional vendor dashboard (for packages/images).</li>
+                            <li>Featured listing control (admin side).</li>
+                            <li>Basic analytics/report: views, clicks, leads sent.</li>
+                            <li>Optional Stripe integration (for booking fee or subscription in a later phase).</li>
+                            <li>Future flexibility for reviews, calendars, or messaging.</li>
+                        </ul>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Pie de página -->
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>Documento convertido a HTML. El contenido es propiedad de Bashwish.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
