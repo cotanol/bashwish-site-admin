@@ -1,3 +1,5 @@
+# TODO: Revisar
+
 FROM node:20-alpine AS base
 
 # Install libc6-compat for some deps

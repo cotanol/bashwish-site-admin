@@ -114,6 +114,12 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.10.4
         version: 2.10.4
+      '@upstash/ratelimit':
+        specifier: ^2.0.8
+        version: 2.0.8(@upstash/redis@1.38.0)
+      '@upstash/redis':
+        specifier: ^1.38.0
+        version: 1.38.0
       apexcharts:
         specifier: 3.49.0
         version: 3.49.0
@@ -899,7 +905,7 @@ packages:
   '@mui/base@5.0.0-beta.66':
     resolution: {integrity: sha512-1SzcNbtIms0o/Dx+599B6QbvR5qUMBUjwc2Gs47h1HsF7RcEFXxqaq7zrWkIWbvGctIIPx0j330oGx/SkF+UmA==}
     engines: {node: '>=14.0.0'}
-    deprecated: This package has been replaced by @base-ui-components/react
+    deprecated: This package has been replaced by @base-ui/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -1295,95 +1301,111 @@ packages:
 
   '@react-email/body@0.2.0':
     resolution: {integrity: sha512-9GCWmVmKUAoRfloboCd+RKm6X17xn7eGL7HnpAZUnjBXBilWCxsKnLMTC/ixSHDKS/A/057M1Tx6ZUXd89sVBw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/button@0.2.0':
     resolution: {integrity: sha512-8i+v6cMxr2emz4ihCrRiYJPp2/sdYsNNsBzXStlcA+/B9Umpm5Jj3WJKYpgTPM+aeyiqlG/MMI1AucnBm4f1oQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/code-block@0.2.0':
     resolution: {integrity: sha512-eIrPW9PIFgDopQU0e/OPpwCW2QWQDtNZDSsiN4sJO8KdMnWWnXJicnRfzrit5rHwFo+Y98i+w/Y5ScnBAFr1dQ==}
     engines: {node: '>=22.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/code-inline@0.0.5':
     resolution: {integrity: sha512-MmAsOzdJpzsnY2cZoPHFPk6uDO/Ncpb4Kh1hAt9UZc1xOW3fIzpe1Pi9y9p6wwUmpaeeDalJxAxH6/fnTquinA==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/column@0.0.13':
     resolution: {integrity: sha512-Lqq17l7ShzJG/d3b1w/+lVO+gp2FM05ZUo/nW0rjxB8xBICXOVv6PqjDnn3FXKssvhO5qAV20lHM6S+spRhEwQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/components@1.0.1':
     resolution: {integrity: sha512-HnL0Y/up61sOBQT2cQg9N/kCoW0bP727gDs2MkFWQYELg6+iIHidMDvENXFC0f1ZE6hTB+4t7sszptvTcJWsDA==}
     engines: {node: '>=22.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/container@0.0.15':
     resolution: {integrity: sha512-Qo2IQo0ru2kZq47REmHW3iXjAQaKu4tpeq/M8m1zHIVwKduL2vYOBQWbC2oDnMtWPmkBjej6XxgtZByxM6cCFg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/font@0.0.9':
     resolution: {integrity: sha512-4zjq23oT9APXkerqeslPH3OZWuh5X4crHK6nx82mVHV2SrLba8+8dPEnWbaACWTNjOCbcLIzaC9unk7Wq2MIXw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/head@0.0.12':
     resolution: {integrity: sha512-X2Ii6dDFMF+D4niNwMAHbTkeCjlYYnMsd7edXOsi0JByxt9wNyZ9EnhFiBoQdqkE+SMDcu8TlNNttMrf5sJeMA==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/heading@0.0.15':
     resolution: {integrity: sha512-xF2GqsvBrp/HbRHWEfOgSfRFX+Q8I5KBEIG5+Lv3Vb2R/NYr0s8A5JhHHGf2pWBMJdbP4B2WHgj/VUrhy8dkIg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/hr@0.0.11':
     resolution: {integrity: sha512-S1gZHVhwOsd1Iad5IFhpfICwNPMGPJidG/Uysy1AwmspyoAP5a4Iw3OWEpINFdgh9MHladbxcLKO2AJO+cA9Lw==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/html@0.0.11':
     resolution: {integrity: sha512-qJhbOQy5VW5qzU74AimjAR9FRFQfrMa7dn4gkEXKMB/S9xZN8e1yC1uA9C15jkXI/PzmJ0muDIWmFwatm5/+VA==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/img@0.0.11':
     resolution: {integrity: sha512-aGc8Y6U5C3igoMaqAJKsCpkbm1XjguQ09Acd+YcTKwjnC2+0w3yGUJkjWB2vTx4tN8dCqQCXO8FmdJpMfOA9EQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/link@0.0.12':
     resolution: {integrity: sha512-vF+xxQk2fGS1CN7UPQDbzvcBGfffr+GjTPNiWM38fhBfsLv6A/YUfaqxWlmL7zLzVmo0K2cvvV9wxlSyNba1aQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/markdown@0.0.17':
     resolution: {integrity: sha512-6op3AfsBC9BJKkhG+eoMFRFWlr0/f3FYbtQrK+VhGzJocEAY0WINIFN+W8xzXr//3IL0K/aKtnH3FtpIuescQQ==}
     engines: {node: '>=22.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/preview@0.0.13':
     resolution: {integrity: sha512-F7j9FJ0JN/A4d7yr+aw28p4uX7VLWs7hTHtLo7WRyw4G+Lit6Zucq4UWKRxJC8lpsUdzVmG7aBJnKOT+urqs/w==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
@@ -1397,18 +1419,21 @@ packages:
   '@react-email/row@0.0.12':
     resolution: {integrity: sha512-HkCdnEjvK3o+n0y0tZKXYhIXUNPDx+2vq1dJTmqappVHXS5tXS6W5JOPZr5j+eoZ8gY3PShI2LWj5rWF7ZEtIQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/section@0.0.16':
     resolution: {integrity: sha512-FjqF9xQ8FoeUZYKSdt8sMIKvoT9XF8BrzhT3xiFKdEMwYNbsDflcjfErJe3jb7Wj/es/lKTbV5QR1dnLzGpL3w==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/tailwind@2.0.1':
     resolution: {integrity: sha512-/xq0IDYVY7863xPY7cdI45Xoz7M6CnIQBJcQvbqN7MNVpopfH9f+mhjayV1JGfKaxlGWuxfLKhgi9T2shsnEFg==}
     engines: {node: '>=22.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       '@react-email/body': 0.2.0
       '@react-email/button': 0.2.0
@@ -1447,6 +1472,7 @@ packages:
   '@react-email/text@0.1.5':
     resolution: {integrity: sha512-o5PNHFSE085VMXayxH+SJ1LSOtGsTv+RpNKnTiJDrJUwoBu77G3PlKOsZZQHCNyD28WsQpl9v2WcJLbQudqwPg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
@@ -1831,6 +1857,19 @@ packages:
 
   '@ungap/structured-clone@1.2.1':
     resolution: {integrity: sha512-fEzPV3hSkSMltkw152tJKNARhOupqbH96MZWyRjNaYZOMIzbrTeQDG+MTc6Mr2pgzFQzFxAfmhGDNP5QK++2ZA==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
+
+  '@upstash/core-analytics@0.0.10':
+    resolution: {integrity: sha512-7qJHGxpQgQr9/vmeS1PktEwvNAF7TI4iJDi8Pu2CFZ9YUGHZH4fOP5TfYlZ4aVxfopnELiE4BS4FBjyK7V1/xQ==}
+    engines: {node: '>=16.0.0'}
+
+  '@upstash/ratelimit@2.0.8':
+    resolution: {integrity: sha512-YSTMBJ1YIxsoPkUMX/P4DDks/xV5YYCswWMamU8ZIfK9ly6ppjRnVOyBhMDXBmzjODm4UQKcxsJPvaeFAijp5w==}
+    peerDependencies:
+      '@upstash/redis': ^1.34.3
+
+  '@upstash/redis@1.38.0':
+    resolution: {integrity: sha512-wu+dZBptlLy0+MCUEoHmzrY/TnmgDey3+c7EbIGwrLqAvkP8yi5MWZHYGIFtAygmL4Bkz2TdFu+eU0vFPncIcg==}
 
   '@xobotyi/scrollbar-width@1.9.5':
     resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
@@ -2754,6 +2793,7 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   global-modules@2.0.0:
@@ -3944,6 +3984,7 @@ packages:
   recharts@2.15.0:
     resolution: {integrity: sha512-cIvMxDfpAmqAmVgc4yb7pgm/O1tmmkl/CjrvXuW+62/+7jj/iF9Ykm+hb/UJt42TREHMyd3gb+pkgoa2MxgDIw==}
     engines: {node: '>=14'}
+    deprecated: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4367,6 +4408,7 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
@@ -4474,6 +4516,9 @@ packages:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
 
+  uncrypto@0.1.3:
+    resolution: {integrity: sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==}
+
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
@@ -4535,10 +4580,12 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   valibot@0.42.1:
@@ -4561,6 +4608,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
@@ -6037,6 +6085,19 @@ snapshots:
       eslint-visitor-keys: 3.4.3
 
   '@ungap/structured-clone@1.2.1': {}
+
+  '@upstash/core-analytics@0.0.10':
+    dependencies:
+      '@upstash/redis': 1.38.0
+
+  '@upstash/ratelimit@2.0.8(@upstash/redis@1.38.0)':
+    dependencies:
+      '@upstash/core-analytics': 0.0.10
+      '@upstash/redis': 1.38.0
+
+  '@upstash/redis@1.38.0':
+    dependencies:
+      uncrypto: 0.1.3
 
   '@xobotyi/scrollbar-width@1.9.5': {}
 
@@ -9048,6 +9109,8 @@ snapshots:
       has-bigints: 1.1.0
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
+
+  uncrypto@0.1.3: {}
 
   undici-types@6.20.0: {}
 

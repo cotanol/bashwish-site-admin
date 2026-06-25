@@ -1,19 +1,75 @@
 import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
+import { agentRateLimiter, apiRateLimiter } from './libs/ratelimit'
 
 export default withAuth(
-  function middleware(req) {
+  async function middleware(req) {
     const token = req.nextauth.token
     const { pathname } = req.nextUrl
 
-    // Public routes - anyone can access
+    // EXTRACCIÓN ROBUSTA DE IP (Local y Producción)
+    const ip =
+      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      req.headers.get('x-real-ip') ||
+      (req as unknown as { ip?: string }).ip ||
+      '127.0.0.1'
+
+    // --- CONTROL DE RATE LIMIT GLOBAL PARA /API ---
+    if (pathname.startsWith('/api')) {
+      try {
+        // Si están atacando al agente de IA (Party Genie)
+        if (pathname.startsWith('/api/party-genie')) {
+          const { success, limit, remaining, reset } = await agentRateLimiter.limit(ip)
+
+          if (!success) {
+            return new NextResponse(
+              JSON.stringify({ error: 'Demasiadas consultas al agente. Por favor, espera unos segundos.' }),
+              {
+                status: 429,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-RateLimit-Limit': limit.toString(),
+                  'X-RateLimit-Remaining': remaining.toString(),
+                  'X-RateLimit-Reset': reset.toString(),
+                  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_PUBLIC_SITE_URL || '*'
+                }
+              }
+            )
+          }
+        }
+        // Si están usando cualquier otra API normal del sistema
+        else {
+          const { success, limit, remaining, reset } = await apiRateLimiter.limit(ip)
+
+          if (!success) {
+            return new NextResponse(JSON.stringify({ error: 'Has superado el límite de peticiones permitidas.' }), {
+              status: 429,
+              headers: {
+                'Content-Type': 'application/json',
+                'X-RateLimit-Limit': limit.toString(),
+                'X-RateLimit-Remaining': remaining.toString(),
+                'X-RateLimit-Reset': reset.toString()
+              }
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Error en Rate Limit:', error)
+      }
+    }
+    // -------------------------------------------------
+
+    // Rutas públicas generales
     const publicPaths = ['/login', '/register', '/forgot-password', '/not-authorized', '/_next', '/api', '/favicon.ico']
 
-    // Allow public API routes (for public_site)
-    if (pathname.startsWith('/api/public') || pathname.startsWith('/api/track-click') || pathname.startsWith('/api/party-genie')) {
+    // Rutas de API con acceso público permitido (Agregando tus cabeceras CORS)
+    if (
+      pathname.startsWith('/api/public') ||
+      pathname.startsWith('/api/track-click') ||
+      pathname.startsWith('/api/party-genie')
+    ) {
       const response = NextResponse.next()
 
-      // Add CORS headers for public API
       const allowedOrigin = process.env.NEXT_PUBLIC_PUBLIC_SITE_URL || '*'
       response.headers.set('Access-Control-Allow-Origin', allowedOrigin)
       response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
@@ -22,89 +78,61 @@ export default withAuth(
       return response
     }
 
-    // Check if path is public
+    // Permitir el acceso si la ruta está en la lista pública
     if (publicPaths.some(path => pathname.startsWith(path))) {
       return NextResponse.next()
     }
 
-    // If not authenticated, let NextAuth handle redirect to login
+    // Si no hay sesión, NextAuth redirige al login automáticamente
     if (!token) {
       return NextResponse.next()
     }
 
     const role = token.role as string
-
-    // Role-based route protection
-    const roleRoutes = {
-      admin: [
-        '/admin/dashboard',
-        '/admin',
-        '/pages/account-settings' // Shared
-      ],
-      vendor: [
-        '/vendor',
-        '/pages/account-settings' // Shared
-      ]
-    }
-
-    // Check if user is trying to access a protected route
     const isAdminRoute = pathname.startsWith('/admin')
     const isVendorRoute = pathname.startsWith('/vendor')
 
-    // Admin trying to access vendor routes
+    // Control estricto de roles (Admin vs Vendor)
     if (role === 'admin' && isVendorRoute) {
       return NextResponse.redirect(new URL('/not-authorized', req.url))
     }
 
-    // Vendor trying to access admin routes
     if (role === 'vendor' && isAdminRoute) {
       return NextResponse.redirect(new URL('/not-authorized', req.url))
     }
 
-    // Root redirect based on role
+    // Redirección inteligente en la raíz principal
     if (pathname === '/') {
       const homeUrl = role === 'admin' ? '/admin/dashboard' : '/vendor/dashboard'
-
       return NextResponse.redirect(new URL(homeUrl, req.url))
     }
+
     return NextResponse.next()
   },
   {
     callbacks: {
-      // Only run middleware if user is authenticated or trying to access protected routes
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl
 
-        // Allow public API routes without auth
-        if (pathname.startsWith('/api/public') || pathname.startsWith('/api/track-click') || pathname.startsWith('/api/party-genie')) {
+        if (
+          pathname.startsWith('/api/public') ||
+          pathname.startsWith('/api/track-click') ||
+          pathname.startsWith('/api/party-genie')
+        ) {
           return true
         }
 
-        // Allow public paths without auth
         const publicPaths = ['/login', '/register', '/forgot-password', '/not-authorized']
-
         if (publicPaths.some(path => pathname.startsWith(path))) {
           return true
         }
 
-        // Require auth for all other routes
         return !!token
       }
     }
   }
 )
 
-// Configure which routes use the middleware
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     * - api routes (handled separately)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
-  ]
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)']
 }
