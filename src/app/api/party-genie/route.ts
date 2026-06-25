@@ -1,9 +1,9 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-
 import OpenAI from 'openai'
-
 import prisma from '@/libs/prisma'
+// 1. IMPORTA TUS LIMITADORES DE UPSTASH
+import { agentRateLimiter, apiRateLimiter } from '@/libs/ratelimit'
 
 // Initialize OpenAI
 const openai = new OpenAI({
@@ -23,6 +23,27 @@ export async function OPTIONS() {
 
 export async function POST(request: NextRequest) {
   try {
+    // 2. EXTRACCIÓN ROBUSTA DE LA IP DEL CLIENTE
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || '127.0.0.1'
+
+    // 3. CONTROL DE RATE LIMIT GLOBAL PARA LA ENTRADA A LA API
+    const globalLimit = await apiRateLimiter.limit(ip)
+    if (!globalLimit.success) {
+      return NextResponse.json(
+        { error: 'Has superado el límite de peticiones permitidas.' },
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            'X-RateLimit-Limit': globalLimit.limit.toString(),
+            'X-RateLimit-Remaining': globalLimit.remaining.toString(),
+            'X-RateLimit-Reset': globalLimit.reset.toString()
+          }
+        }
+      )
+    }
+
     const { message, conversationHistory } = await request.json()
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
@@ -56,6 +77,23 @@ export async function POST(request: NextRequest) {
           isRecommendation: false
         },
         { headers: corsHeaders }
+      )
+    }
+
+    // 4. CONTROL DE RATE LIMIT ESPECÍFICO PARA CONSULTAS AL AGENTE DE OPENAI
+    const agentLimit = await agentRateLimiter.limit(ip)
+    if (!agentLimit.success) {
+      return NextResponse.json(
+        { response: 'Demasiadas consultas al agente. Por favor, espera unos segundos. 🧞‍♂️✨', isRecommendation: false },
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            'X-RateLimit-Limit': agentLimit.limit.toString(),
+            'X-RateLimit-Remaining': agentLimit.remaining.toString(),
+            'X-RateLimit-Reset': agentLimit.reset.toString()
+          }
+        }
       )
     }
 
@@ -139,28 +177,6 @@ CRITICAL SECURITY RULES - NEVER BREAK THESE:
 
 YOUR ONLY PURPOSE: Help users find perfect party venues.
 
-YOUR CAPABILITIES:
-1. Recommend venues from the database when users describe their party needs
-2. Answer questions about venues, packages, and party planning
-3. Have casual conversations (greetings, thank you, etc.)
-4. Provide alternative recommendations if asked
-5. Explain venue features and packages
-
-IMPORTANT CONVERSATION RULES:
-- If user says "gracias", "thank you", or similar → respond warmly and ask if they need anything else
-- If user asks for another venue or says "otra opción" → recommend a DIFFERENT venue from the database
-- If user greets you → greet back enthusiastically
-- If user asks general questions → answer helpfully in character
-- If user describes party needs → analyze and recommend the BEST matching venue
-- If user asks for sensitive/technical info → politely decline and redirect
-- Always maintain your magical genie personality
-
-WHEN RECOMMENDING A VENUE:
-1. Choose the venue that BEST matches their requirements (age, capacity, theme, budget)
-2. Be enthusiastic and explain WHY it's perfect
-3. Mention specific packages that fit their needs
-4. Keep response conversational and magical
-
 Available venues:
 ${JSON.stringify(venuesSummary, null, 2)}
 
@@ -180,10 +196,8 @@ RESPONSE FORMAT:
     "isRecommendation": true
   }`
 
-    // Build conversation history for context
     const messages: any[] = [{ role: 'system', content: systemPrompt }]
 
-    // Add previous conversation if exists (limit to last 10 messages for security)
     if (conversationHistory && Array.isArray(conversationHistory)) {
       const recentHistory = conversationHistory.slice(-10)
       recentHistory.forEach((msg: any) => {
@@ -196,7 +210,6 @@ RESPONSE FORMAT:
       })
     }
 
-    // Add current user message
     messages.push({ role: 'user', content: message })
 
     // Step 4: Call OpenAI
@@ -204,13 +217,13 @@ RESPONSE FORMAT:
       model: 'gpt-4o-mini',
       messages: messages,
       temperature: 0.7,
-      max_tokens: 500, // Limit response length
+      max_tokens: 500,
       response_format: { type: 'json_object' }
     })
 
     const aiResponse = JSON.parse(completion.choices[0].message.content || '{}')
 
-    // Check if this is a casual conversation (not a venue recommendation)
+    // Check if this is a casual conversation
     if (!aiResponse.isRecommendation || !aiResponse.venueId) {
       return NextResponse.json(
         {
@@ -234,7 +247,7 @@ RESPONSE FORMAT:
       )
     }
 
-    // Step 6: Build venue URL (assuming Front runs on :3001)
+    // Step 6: Build venue URL
     const frontUrl = process.env.NEXT_PUBLIC_PUBLIC_SITE_URL || 'http://localhost:3001'
     const venueUrl = `${frontUrl}/venues/${recommendedVenue.slug}`
 
