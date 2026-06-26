@@ -85,11 +85,12 @@ const BashwishDashboard = ({ venueStats, vendors, clickAnalytics }: Props) => {
   // Prepare data for EarningReports (Weekly Activity Chart)
   const earningReportsData = {
     chartData: {
-      searchesByDay: clickAnalytics?.clicksByDay.map(d => ({
-        day: d.day,
-        searches: d.clicks,
-        clicks: d.clicks
-      })) || []
+      searchesByDay:
+        clickAnalytics?.clicksByDay.map(d => ({
+          day: d.day,
+          searches: d.clicks,
+          clicks: d.clicks
+        })) || []
     },
     overview: {
       totalSearches: clickAnalytics?.totalClicks || 0,
@@ -115,7 +116,7 @@ const BashwishDashboard = ({ venueStats, vendors, clickAnalytics }: Props) => {
         <Card className='bg-gradient-to-r from-primary-500 to-primary-600'>
           <CardContent className='text-white'>
             <Typography variant='h4' className='mb-2'>
-              Welcome to BashWish Admin Dashboard 🎉
+              Welcome to DEMO Admin Dashboard 🎉
             </Typography>
             <Typography variant='body1' className='opacity-90'>
               Manage venues, vendors, and track platform analytics
