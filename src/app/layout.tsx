@@ -17,9 +17,9 @@ import '@/app/globals.css'
 import '@assets/iconify-icons/generated-icons.css'
 
 export const metadata = {
-  title: 'BashWish Admin - Venue Management Dashboard',
+  title: 'DEMO Admin - Venue Management Dashboard',
   description:
-    'BashWish Admin Dashboard - Manage venues, bookings, customers and analytics for kids party venues in Houston.'
+    'DEMO Admin Dashboard - Manage venues, bookings, customers and analytics for kids party venues in Houston.'
 }
 
 const RootLayout = async (props: ChildrenType) => {
